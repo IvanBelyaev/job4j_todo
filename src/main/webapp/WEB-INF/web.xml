@@ -4,4 +4,40 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+  <servlet>
+    <servlet-name>GetAllItemsServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.GetAllItemsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetAllItemsServlet</servlet-name>
+    <url-pattern>/tasks.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AddTaskServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.AddTaskServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddTaskServlet</servlet-name>
+    <url-pattern>/add.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UpdateServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.UpdateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateServlet</servlet-name>
+    <url-pattern>/update.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DeleteServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.DeleteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteServlet</servlet-name>
+    <url-pattern>/delete.do</url-pattern>
+  </servlet-mapping>
 </web-app>
