@@ -2,6 +2,8 @@ package ru.job4j.todo.servlets;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.store.StoreHbm;
 
@@ -13,18 +15,24 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class GetAllItemsServlet extends HttpServlet {
+    private final Logger logger = LoggerFactory.getLogger(GetAllItemsServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
-        List<Item> allItems = StoreHbm.instOf().getAllItems();
+        try {
+            List<Item> allItems = StoreHbm.instOf().getAllItems();
 
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("items", new JSONArray(allItems));
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            String out = jsonResponse.toString();
-            writer.println(out);
-            writer.flush();
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("items", new JSONArray(allItems));
+            try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+                String out = jsonResponse.toString();
+                writer.println(out);
+                writer.flush();
+            }
+        } catch (final Exception e) {
+            logger.error("Exception when getting items from database", e);
         }
     }
 }

@@ -23,7 +23,7 @@ let addTask = function (id, taskName, created, isDone) {
         let item = data.item;
         addToFront(item.id, item.description, item.created, JSON.parse(item.done));
     }).fail(function (err) {
-        alert(err);
+
     });
 }
 
@@ -79,7 +79,13 @@ let updateItem = function(checkbox) {
     }).done(function (data) {
 
     }).fail(function (err) {
-        alert(err);
+        if ($(checkbox).is(':checked')) {
+            $(checkbox).parent().parent().removeClass('complete');
+            $(checkbox).prop("checked", false);
+        } else {
+            $(checkbox).parent().parent().addClass('complete');
+            $(checkbox).prop("checked", true);
+        }
     });
 };
 
@@ -111,7 +117,7 @@ let getAllTasks = function () {
             addToFront(id, description, created, done);
         }
     }).fail(function (err) {
-        alert(err);
+
     });
 };
 
@@ -136,6 +142,6 @@ let deleteItem = function (id) {
     }).done(function (data) {
         $("#" + id).remove();
     }).fail(function (err) {
-        alert(err);
+
     });
 }
