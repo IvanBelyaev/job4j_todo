@@ -23,13 +23,6 @@ public class Item {
         this.created = LocalDateTime.now();
     }
 
-    public Item(long id, String description, String created, boolean done) {
-        this.id = id;
-        this.description = description;
-        this.created = LocalDateTime.parse(created);
-        this.done = done;
-    }
-
     public long getId() {
         return id;
     }

@@ -31,7 +31,7 @@ let addToFront = function (id, taskName, created, done) {
     let doneSpan = $("<span></span>").addClass("col-1").append("<input type='checkbox'>");
     let idSpan = $("<span></span>").addClass("col-1").text(id);
     let descSpan = $("<span></span>").addClass("col-6").text(taskName);
-    let createdSpan = $("<span></span>").addClass("col-3").prop("localDateTime", created).text(formatDate(created));
+    let createdSpan = $("<span></span>").addClass("col-3").text(formatDate(created));
     let deleteSpan = $("<span></span>").append("<i class='fa fa-trash col-1'></i>");
     let item = $("<div></div>")
         .addClass("todo-item")
@@ -46,8 +46,14 @@ let addToFront = function (id, taskName, created, done) {
 
 let formatDate = function (created) {
     let date = new Date(created);
-    return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " "
-        + date.getHours() + ":" + date.getMinutes();
+    let options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+    };
+    return date.toLocaleString("ru", options);
 };
 
 $(document).ready(function() {
