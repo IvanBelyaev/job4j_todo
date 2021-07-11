@@ -14,8 +14,8 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="./js/auth.js"></script>
-    <title>TODO list. Authorization.</title>
+    <script src="./js/reg.js"></script>
+    <title>TODO list. Registration.</title>
 </head>
 <body>
 <div class="container">
@@ -31,19 +31,23 @@
             </ul>
             <div class="card">
                 <div class="card-header">
-                    Авторизация
+                    Регистрация
                 </div>
                 <div class="card-body">
-                    <form action="./auth.do" method="post" onsubmit="return validate();">
+                    <form action="./reg.do" method="post" onsubmit="return validate();">
                         <div class="form-group">
-                            <label for="name">Имя пользователя</label>
+                            <label for="name" id="nameLabel">Имя пользователя</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Введите имя пользователя">
                         </div>
                         <div class="form-group">
-                            <label for="password">Пароль</label>
+                            <label for="email" id="emailLabel">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Введите email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" id="passwordLabel">Пароль</label>
                             <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль">
                         </div>
-                        <button type="submit" class="btn btn-primary">Войти</button>
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                     </form>
                 </div>
             </div>

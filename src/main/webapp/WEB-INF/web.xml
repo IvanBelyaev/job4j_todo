@@ -5,6 +5,15 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>ru.job4j.todo.filter.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>GetAllItemsServlet</servlet-name>
     <servlet-class>ru.job4j.todo.servlets.GetAllItemsServlet</servlet-class>
@@ -39,5 +48,32 @@
   <servlet-mapping>
     <servlet-name>DeleteServlet</servlet-name>
     <url-pattern>/delete.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RegistrationServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.RegistrationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegistrationServlet</servlet-name>
+    <url-pattern>/reg.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AuthorizationServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.AuthorizationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthorizationServlet</servlet-name>
+    <url-pattern>/auth.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ExitServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlets.ExitServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExitServlet</servlet-name>
+    <url-pattern>/exit.do</url-pattern>
   </servlet-mapping>
 </web-app>

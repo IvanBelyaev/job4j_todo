@@ -4,19 +4,19 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.StoreHbm;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 public class AddTaskServlet extends HttpServlet {
     private final Logger logger = LoggerFactory.getLogger(AddTaskServlet.class);
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String json = req.getParameter("item");
         JSONObject requestObject = new JSONObject(json);
         Item item = new Item(
@@ -24,6 +24,8 @@ public class AddTaskServlet extends HttpServlet {
                 requestObject.getString("description"),
                 requestObject.getBoolean("done")
         );
+        User user = (User) req.getSession().getAttribute("user");
+        item.setUser(user);
         try {
             Item itemFromDB = StoreHbm.instOf().add(item);
 

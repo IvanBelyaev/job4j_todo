@@ -106,9 +106,7 @@ let getAllTasks = function () {
         dataType: 'json'
     }).done(function (data) {
         let items = data.items;
-        if (items.length > 0) {
-            $(".todo-header").addClass("visible");
-        }
+        let user = data.user;
         for (let i = 0; i < items.length; i++) {
             let id = items[i]["id"];
             let description = items[i]["description"];
@@ -116,6 +114,7 @@ let getAllTasks = function () {
             let done = JSON.parse(items[i]["done"]);
             addToFront(id, description, created, done);
         }
+        $("#userinfo a").text(user + " | Выйти");
     }).fail(function (err) {
 
     });
