@@ -21,22 +21,23 @@ let addTask = function (id, taskName, created, isDone) {
         dataType: 'json'
     }).done(function (data) {
         let item = data.item;
-        addToFront(item.id, item.description, item.created, JSON.parse(item.done));
+        addToFront(item.id, item.description, item.created, JSON.parse(item.done), item.user.name);
     }).fail(function (err) {
 
     });
 }
 
-let addToFront = function (id, taskName, created, done) {
+let addToFront = function (id, taskName, created, done, username) {
     let doneSpan = $("<span></span>").addClass("col-1").append("<input type='checkbox'>");
     let idSpan = $("<span></span>").addClass("col-1").text(id);
-    let descSpan = $("<span></span>").addClass("col-6").text(taskName);
+    let descSpan = $("<span></span>").addClass("col-5").text(taskName);
     let createdSpan = $("<span></span>").addClass("col-3").text(formatDate(created));
+    let authorSpan = $("<span></span>").addClass("col-1").text(username);
     let deleteSpan = $("<span></span>").append("<i class='fa fa-trash col-1'></i>");
     let item = $("<div></div>")
         .addClass("todo-item")
         .prop('id', id)
-        .append(doneSpan, " ", idSpan, " ", descSpan, " ", createdSpan, " ", deleteSpan);
+        .append(doneSpan, " ", idSpan, " ", descSpan, " ", createdSpan, " ", authorSpan, " ", deleteSpan);
     $("#list").append(item);
     if (done) {
         $("#" + id + " input:checkbox").prop('checked', true);
@@ -112,7 +113,8 @@ let getAllTasks = function () {
             let description = items[i]["description"];
             let created = items[i]["created"]
             let done = JSON.parse(items[i]["done"]);
-            addToFront(id, description, created, done);
+            let username = items[i]["user"]["name"];
+            addToFront(id, description, created, done, username);
         }
         $("#userinfo a").text(user + " | Выйти");
     }).fail(function (err) {

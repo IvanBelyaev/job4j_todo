@@ -87,9 +87,6 @@ public class StoreHbm implements Store {
                 Query userQuery = session.createQuery("from User where name = :username");
                 userQuery.setParameter("username" , userName);
                 User user = (User) userQuery.uniqueResult();
-                if (user == null) {
-                    throw new RuntimeException("There is no user named " + userName + " in the database");
-                }
                 return user;
             }
         );
