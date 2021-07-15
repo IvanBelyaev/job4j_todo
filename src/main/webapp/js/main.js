@@ -1,19 +1,40 @@
 let add = function(){
-    let taskName = $('#description').val();
-    addTask(0, taskName, "", false);
+    if (validate()) {
+        let taskName = $('#description').val();
+        let categories = $('#categories').val();
+        addTask(0, taskName, "", false, categories);
+    }
 };
 
-let makeJson = function (id, taskName, created, isDone) {
+let validate = function () {
+    let result = true;
+    if ($("#description").val() === "") {
+        $("#descriptionLabel").text("Новое задание (заполните поле)").css("color", "#740000");
+        result = false;
+    } else {
+        $("#descriptionLabel").text("Новое задание").css("color", "#000000");
+    }
+    if ($("#categories").val().length === 0) {
+        $("#categoriesLabel").text("Категории (не выбрано)").css("color", "#740000");
+        result = false;
+    } else {
+        $("#categoriesLabel").text("Категории").css("color", "#000000");
+    }
+    return result;
+}
+
+let makeJson = function (id, taskName, created, isDone, categories) {
     let item = {};
     item["id"] = Number(id);
     item["description"] = taskName;
     item["created"] = created;
     item["done"] = isDone;
+    item["categories"] = categories;
     return JSON.stringify(item);
 };
 
-let addTask = function (id, taskName, created, isDone) {
-    let json = makeJson(id, taskName, created, isDone);
+let addTask = function (id, taskName, created, isDone, categories) {
+    let json = makeJson(id, taskName, created, isDone, categories);
     $.ajax({
         type: 'POST',
         url: './add.do',
@@ -21,23 +42,34 @@ let addTask = function (id, taskName, created, isDone) {
         dataType: 'json'
     }).done(function (data) {
         let item = data.item;
-        addToFront(item.id, item.description, item.created, JSON.parse(item.done), item.user.name);
+        addToFront(item.id, item.description, item.created, JSON.parse(item.done), item.user.name, item.categories);
     }).fail(function (err) {
 
     });
 }
 
-let addToFront = function (id, taskName, created, done, username) {
+let addToFront = function (id, taskName, created, done, username, categories) {
     let doneSpan = $("<span></span>").addClass("col-1").append("<input type='checkbox'>");
     let idSpan = $("<span></span>").addClass("col-1").text(id);
-    let descSpan = $("<span></span>").addClass("col-5").text(taskName);
-    let createdSpan = $("<span></span>").addClass("col-3").text(formatDate(created));
+    let descSpan = $("<span></span>").addClass("col-4").text(taskName);
+    let namesOfCategories = "";
+    for (let i = 0; i < categories.length; i++) {
+        namesOfCategories += categories[i].name;
+        if (i < categories.length - 1) {
+            namesOfCategories += ", ";
+        }
+    }
+    let categorySpan = $("<span></span>").addClass("col-2").text(namesOfCategories);
+    let createdSpan = $("<span></span>").addClass("col-2").text(formatDate(created));
     let authorSpan = $("<span></span>").addClass("col-1").text(username);
     let deleteSpan = $("<span></span>").append("<i class='fa fa-trash col-1'></i>");
     let item = $("<div></div>")
         .addClass("todo-item")
         .prop('id', id)
-        .append(doneSpan, " ", idSpan, " ", descSpan, " ", createdSpan, " ", authorSpan, " ", deleteSpan);
+        .append(
+            doneSpan, " ", idSpan, " ", descSpan, " ", categorySpan, " ",
+            createdSpan, " ", authorSpan, " ", deleteSpan
+        );
     $("#list").append(item);
     if (done) {
         $("#" + id + " input:checkbox").prop('checked', true);
@@ -71,7 +103,7 @@ $(document).ready(function() {
 let updateItem = function(checkbox) {
     let done = $(checkbox).is(":checked");
     let id = $(checkbox).parent().parent().prop("id");
-    let json = makeJson(id, "", "", done);
+    let json = makeJson(id, "", "", done, "");
     $.ajax({
         type: 'POST',
         url: './update.do',
@@ -108,13 +140,19 @@ let getAllTasks = function () {
     }).done(function (data) {
         let items = data.items;
         let user = data.user;
+        let categories = data.categories;
         for (let i = 0; i < items.length; i++) {
             let id = items[i]["id"];
             let description = items[i]["description"];
             let created = items[i]["created"]
             let done = JSON.parse(items[i]["done"]);
             let username = items[i]["user"]["name"];
-            addToFront(id, description, created, done, username);
+            let categories = items[i]["categories"];
+            addToFront(id, description, created, done, username, categories);
+        }
+        for (let i = 0; i < categories.length; i++) {
+            let option = $('<option></option>').text(categories[i].name).prop("value", categories[i].id);
+            $("#categories").append(option);
         }
         $("#userinfo a").text(user + " | Выйти");
     }).fail(function (err) {
@@ -134,7 +172,7 @@ $(document).ready(function () {
 });
 
 let deleteItem = function (id) {
-    let json = makeJson(id, "", "", true);
+    let json = makeJson(id, "", "", true, "");
     $.ajax({
         type: 'POST',
         url: './delete.do',

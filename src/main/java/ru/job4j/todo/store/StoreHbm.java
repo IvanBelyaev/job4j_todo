@@ -7,6 +7,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.model.User;
 
@@ -32,9 +33,13 @@ public class StoreHbm implements Store {
     }
 
     @Override
-    public Item add(Item item) {
+    public Item add(Item item, List<Long> categoriesIds) {
         return this.txFunction(
                 session -> {
+                    for (long id : categoriesIds) {
+                        Category category = session.find(Category.class, id);
+                        item.addCategory(category);
+                    }
                     session.save(item);
                     return item;
                 }
@@ -66,7 +71,9 @@ public class StoreHbm implements Store {
     public List<Item> getAllItems(long id) {
         return this.txFunction(
                 session -> {
-                    Query itemsQuery =  session.createQuery("from Item i where i.user.id = :userId");
+                    Query itemsQuery =  session.createQuery(
+                            "select distinct i from Item i join fetch i.categories where i.user.id = :userId"
+                    );
                     itemsQuery.setParameter("userId", id);
                     return itemsQuery.list();
                 }
@@ -83,12 +90,19 @@ public class StoreHbm implements Store {
     @Override
     public User getUserByName(String userName) {
         return this.txFunction(
-            session -> {
-                Query userQuery = session.createQuery("from User where name = :username");
-                userQuery.setParameter("username" , userName);
-                User user = (User) userQuery.uniqueResult();
-                return user;
-            }
+                session -> {
+                    Query userQuery = session.createQuery("from User where name = :username");
+                    userQuery.setParameter("username" , userName);
+                    User user = (User) userQuery.uniqueResult();
+                    return user;
+                }
+        );
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return this.txFunction(
+                session -> session.createQuery("from Category", Category.class).list()
         );
     }
 

@@ -1,5 +1,6 @@
 package ru.job4j.todo.servlets;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddTaskServlet extends HttpServlet {
     private final Logger logger = LoggerFactory.getLogger(AddTaskServlet.class);
@@ -24,10 +27,15 @@ public class AddTaskServlet extends HttpServlet {
                 requestObject.getString("description"),
                 requestObject.getBoolean("done")
         );
+        JSONArray categories = requestObject.getJSONArray("categories");
+        List<Long> categoriesIds = new ArrayList<>();
+        for (int i = 0; i < categories.length(); i++) {
+            categoriesIds.add(categories.getLong(i));
+        }
         User user = (User) req.getSession().getAttribute("user");
         item.setUser(user);
         try {
-            Item itemFromDB = StoreHbm.instOf().add(item);
+            Item itemFromDB = StoreHbm.instOf().add(item, categoriesIds);
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");

@@ -27,8 +27,13 @@
             </div>
             <form>
                 <div class="form-group">
-                    <label for="description">Новое задание</label>
+                    <label for="description" id="descriptionLabel">Новое задание</label>
                     <input type="text" class="form-control" id="description" placeholder="Введите новое задание">
+                </div>
+                <div class="form-group">
+                    <label for="categories" id="categoriesLabel">Категории</label>
+                    <select class="form-control" name="categories" id="categories" multiple>
+                    </select>
                 </div>
                 <button type="button" class="btn btn-primary" id="addButton" onclick="add();">Добавить</button>
             </form>
@@ -40,8 +45,9 @@
                 <div class="todo-header">
                     <span class="col-1">done</span>
                     <span class="col-1">id</span>
-                    <span class="col-5">description</span>
-                    <span class="col-3">created</span>
+                    <span class="col-4">description</span>
+                    <span class="col-2">categories</span>
+                    <span class="col-2">created</span>
                     <span class="col-1">author</span>
                     <span class="col-1"></span>
                 </div>
