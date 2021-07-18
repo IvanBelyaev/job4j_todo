@@ -42,6 +42,7 @@ let addTask = function (id, taskName, created, isDone, categories) {
         dataType: 'json'
     }).done(function (data) {
         let item = data.item;
+        console.log(item.created);
         addToFront(item.id, item.description, item.created, JSON.parse(item.done), item.user.name, item.categories);
     }).fail(function (err) {
 
@@ -78,7 +79,36 @@ let addToFront = function (id, taskName, created, done, username, categories) {
 };
 
 let formatDate = function (created) {
-    let date = new Date(created);
+    // Sun Jul 18 22:46:06 MSK 2021
+    // (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
+
+    let months = new Map([
+        ["Jan", 0],
+        ["Feb", 1],
+        ["Mar", 2],
+        ["Apr", 3],
+        ["May", 4],
+        ["Jun", 5],
+        ["Jul", 6],
+        ["Aug", 7],
+        ["Sep", 8],
+        ["Oct", 9],
+        ["Nov", 10],
+        ["Dec", 11]
+    ]);
+    let year = created.substr(24, 4);
+    let month = created.substr(4, 3);
+    let monthIndex = months.get(month);
+    let day = created.substr(8, 2);
+    let hour = created.substr(11, 2);
+    let minutes = created.substr(14, 2);
+    console.log(year);
+    console.log(month);
+    console.log(monthIndex);
+    console.log(day);
+    console.log(hour);
+    console.log(minutes);
+    let date = new Date(year, monthIndex, day, hour, minutes);
     let options = {
         year: 'numeric',
         month: 'long',
